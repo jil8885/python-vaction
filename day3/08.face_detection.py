@@ -38,28 +38,24 @@ def open_img():
     headers = {"X-Naver-Client-Id": client_id, "X-Naver-Client-Secret": client_secret}
     for file in file_list:
         print(file)
-        if file.split('/')[-1] != '.DS_Store':
-            files = {'image': open(file, 'rb')}
-            response = requests.post(url, files=files, headers=headers)
-            rescode = response.status_code
-            if rescode == 200:
-                detect_result = json.loads(response.text)['faces']
-                img = mpimg.imread(file)
-                imgplot = plt.imshow(img)
-                fig, ax = plt.subplots(figsize=(10, 10))
-                ax.imshow(img)
-                for each in detect_result['faces']:
-                    x, y, w, h = each['roi'].values()
-                    gender, gen_confidence = each['gender'].values()
-                    emotion, emotion_confidence = each['emotion'].values()
-                    age, age_confidence = each['age'].values()
-                    rect_face = patches.Rectangle((x, y), w, h, linewidth=5, edgecolor='r', facecolor='none')
-                    ax.add_patch(rect_face)
-                    annotation = age
-                    plt.figtext(0.15, 0.17, annotation, wrap=True, fontsize=17, color='white')
-                    plt.show()
-
-            else:
-                print("Error Code"+ rescode)
+        files = {'image': open(file, 'rb')}
+        response = requests.post(url, files=files, headers=headers)
+        rescode = response.status_code
+        if rescode == 200:
+            detect_result = json.loads(response.text)['faces']
+            img = mpimg.imread(file)
+            imgplot = plt.imshow(img)
+            fig, ax = plt.subplots(figsize=(10, 10))
+            ax.imshow(img)
+            for each in detect_result['faces']:
+                x, y, w, h = each['roi'].values()
+                gender, gen_confidence = each['gender'].values()
+                emotion, emotion_confidence = each['emotion'].values()
+                age, age_confidence = each['age'].values()
+                rect_face = patches.Rectangle((x, y), w, h, linewidth=5, edgecolor='r', facecolor='none')
+                ax.add_patch(rect_face)
+                annotation = age
+                plt.figtext(0.15, 0.17, annotation, wrap=True, fontsize=17, color='white')
+                plt.show()
 
 open_img()
